@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<document>
+  <properties>
+    <title>CHANGES</title>
+  </properties>
+
+  <body>
+  <section name="Changelog">
+      <subsection name="1/9/2013: 0.1">
+          <ul>
+              <li>Initial public release</li>
+			  <li>Added stages to better reflect the logic of the service. Methods will throw runtime exceptions if you try to call them in the wrong order.</li>
+			  <li>Added documentation</li>
+          </ul>
+		  <p>Known issues:</p>
+		  <ul>
+			<li>Unlike the original Perl client, this version does not support uploading base files yet.</li>
+		  </ul>
+    </subsection>
+    <subsection name="8/8/2012: 0.0.1">
+    	<p>Initial private release.</p>
+    </subsection>
+    </section>
+  </body>
+</document>

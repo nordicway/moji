@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<faqs title="Frequently Asked Questions">
+
+<part id="General">
+<title>General</title>
+    <faq id="differences">
+      <question>
+        What are the differences between MOJI and the official Perl client?
+      </question>
+      <answer>
+        <ul>
+        <li>MOJI works cross-platform. Including Windows, where the original client requires some modifications to run properly.</li>
+        <li>MOJI is better suited for integration into an already existing online e-Learning system, especially if that system is Java based. It has exception handling and can be deployed using Maven.</li>
+        <li>MOJI, internally, uses directory mode only. This detail should be negligible if you are starting from scratch. But please keep it in mind when porting your application from the Perl client.</li>
+        <li>MOJI does not support uploading base files (yet). You can use <em>optM</em> to fine tune matches against base code which is supplied to students for an assignment.</li>
+        <li>MOJI uses Java as its default language for programming sources.</li>
+        </ul>
+         <p>
+         </p>
+      </answer>
+    </faq>
+    
+	<faq id="options">
+      <question>
+        What is the meaning of optN, optX, etc.?
+      </question>
+      <answer>
+      	<p>Detailed explanations of these parameters can be found in the source code of the original client. Here is a short summary:</p>
+         <p><strong>optC</strong>: Comment string. Will show up on the results page so different results can be distinguished from each other.</p>
+         <p><strong>optD</strong>: Directory mode.</p>
+         <p><strong>optM</strong>: Do not treat source code passage as plagiarism if it is found at least this many times. Supplies an easy way to detect base/template code.</p>
+         <p><strong>optN</strong>: Defines how many matches to display on the results page.</p>
+         <p><strong>optX</strong>: Experimental feature support. Set to 1 to use the experimental MOSS server.</p>
+      </answer>
+    </faq>
+</part>
+
+<part id="Development">
+<title>Development</title>
+   
+    <faq id="runtime-exceptions">
+      <question>
+        Why are there runtime exceptions after compiling successfully?
+      </question>
+      <answer>
+         <p>
+         If you get runtime exceptions, you are trying to call methods of the socket client in the wrong order -- for example by uploading files before authenticating with the server.
+         </p>
+      </answer>
+    </faq>
+</part>
+
+</faqs>

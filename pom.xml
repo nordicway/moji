@@ -1,0 +1,132 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+        <modelVersion>4.0.0</modelVersion>
+        <groupId>it.zielke</groupId>
+        <artifactId>moji</artifactId>
+        <version>0.1.0</version>
+        <name>MOJI</name>
+        <description>
+MOJI is an unofficial client for the MOSS plagiarism detection service. It allows you to check source codes of students for plagiarism or collusion.
+MOJI has the following key features:
+- Pure Java implementation with few dependencies
+- Cross-platform support
+</description>
+        <inceptionYear>2012</inceptionYear>
+        <url>http://www.zielke.it/moji/</url>
+        <properties>
+                <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+                <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        </properties>
+        <dependencies>
+                <dependency>
+                        <groupId>commons-io</groupId>
+                        <artifactId>commons-io</artifactId>
+                        <version>2.3</version>
+                </dependency>
+                <dependency>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                        <version>4.11</version>
+                        <scope>test</scope>
+                </dependency>
+                <dependency>
+                        <groupId>com.google.code.findbugs</groupId>
+                        <artifactId>annotations</artifactId>
+                        <version>2.0.1</version>
+                </dependency>
+        </dependencies>
+        <reporting>
+                <plugins>
+                        <plugin>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>findbugs-maven-plugin</artifactId>
+                                <version>2.5.2</version>
+                                <configuration>
+                                        <effort>Max</effort>
+                                        <threshold>Low</threshold>
+                                        <trace>true</trace>
+                                </configuration>
+                        </plugin>
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-surefire-report-plugin</artifactId>
+                                <version>2.16</version>
+                        </plugin>
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-javadoc-plugin</artifactId>
+                                <version>2.9</version>
+                                <reportSets>
+                                        <reportSet>
+                                                <reports>
+                                                        <report>javadoc</report>
+                                                </reports>
+                                        </reportSet>
+                                </reportSets>
+                        </plugin>
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-project-info-reports-plugin</artifactId>
+                                <version>2.7</version>
+                                <reportSets>
+                                        <reportSet>
+                                                <reports>
+                                                        <report>index</report>
+                                                        <report>dependencies</report>
+                                                        <report>project-team</report>
+                                                        <report>summary</report>
+                                                        <report>license</report>
+                                                </reports>
+                                        </reportSet>
+                                </reportSets>
+                        </plugin>
+
+                </plugins>
+        </reporting>
+        <licenses>
+                <license>
+                        <name>MIT License</name>
+                        <url>LICENSE.txt</url>
+                        <distribution>repo</distribution>
+                </license>
+        </licenses>
+        <developers>
+                <developer>
+                        <name>Bjoern Zielke</name>
+                        <url>http://www.zielke.it</url>
+                        <timezone>+2</timezone>
+                </developer>
+        </developers>
+        <build>
+                <plugins>
+                        <plugin>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>findbugs-maven-plugin</artifactId>
+                                <version>2.5.2</version>
+                        </plugin>
+						<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>2.5.2</version>
+			</plugin>
+			<plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+		<version>1.7</version>
+        <executions>
+          <execution>
+            <phase>site</phase>
+            <configuration>
+              <tasks>
+                <mkdir dir="target/site/downloads"/>
+				<copy file="target/${project.build.finalName}.${project.packaging}" todir="target/site/downloads"/>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+                </plugins>
+        </build>
+</project>

@@ -1,0 +1,63 @@
+Preparation
+
+
+ * copy student source codes to a directory where each subdirectory contains the source code of a single student
+ 
+ * a valid directory containing student solutions might look like this:
+
+-------
+	solution_directory
+	|- student1
+	   |- classA.java
+	   |- ...
+	|- student2
+	   |- ...
+	|_ student3
+	   |- ...
+-------
+
+Usage
+
+ {{{./download.html}Download}} the JAR and include it into your Java project.
+ Alternatively use Maven (note: there is no public Maven repo including MOJI as of writing this).
+
+Example code
+
++-----+
+import java.io.File;
+import java.util.List;
+import java.net.URL;
+
+public class QuickStart {
+	public static void main(String[] args) throws Exception {
+		//a list of student's source code files in the source code directory
+		//List<File> files = ...;
+		
+		//get a new socket client to communicate with the MOSS server
+		//and set its parameters.
+		SocketClient socketClient = new SocketClient();
+		
+		//set your MOSS user ID
+		socketClient.setUserID("123456789");
+		//socketClient.setOpt...
+		
+		//set the programming language of all student source codes
+		socketClient.setLanguage("java");
+		
+		//initialize connection and send parameters
+		socketClient.run();
+		
+		//upload all source files of students
+		for (File f : files) {
+			socketClient.uploadFile(f);
+		}
+		
+		//finished uploading, tell server to check files
+		socketClient.sendQuery();
+		
+		//get URL with MOSS results and do something with it
+		URL results = socketClient.getResultURL();
+		System.out.println(results.toString());
+	}
+}
++-----+
