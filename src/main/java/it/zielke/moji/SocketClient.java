@@ -490,10 +490,36 @@ public class SocketClient {
 	 * @throws IOException
 	 *             if the file could not be read
 	 */
+	public void uploadFile(File file) throws IOException {
+		uploadFile(file, false);
+	}
+
+	/**
+	 * Uploads a single base file to the MOSS server.
+	 * 
+	 * @param file
+	 *            the base file to be uploaded
+	 * @throws IOException
+	 *             if the file could not be read
+	 */
+	public void uploadBaseFile(File file) throws IOException {
+		uploadFile(file, true);
+	}
+
+	/**
+	 * Uploads a single file to the MOSS server.
+	 * 
+	 * @param file
+	 *            the source code file to be uploaded
+	 * @param isBaseFile
+	 *            true is base file. false otherwise.
+	 * @throws IOException
+	 *             if the file could not be read
+	 */
 	@edu.umd.cs.findbugs.annotations.SuppressWarnings(
 			value = "VA_FORMAT_STRING_USES_NEWLINE",
 			justification = "We do want platform-independent newline here.")
-	public void uploadFile(File file) throws IOException {
+	public void uploadFile(File file, boolean isBaseFile) throws IOException {
 		if (currentStage != Stage.AWAITING_FILES
 				&& currentStage != Stage.AWAITING_QUERY) {
 			throw new RuntimeException(
@@ -505,7 +531,7 @@ public class SocketClient {
 		fileString = fileString.replace("\r\n", "\n");
 
 		String uploadString = String.format("file %d %s %d %s\n", // format:
-				getIncSetID(), // 1. setID
+				isBaseFile ? 0 : getIncSetID(), // 1. setID
 				language, // 2. language
 				fileString.getBytes(Charsets.US_ASCII).length, // 3. size
 				/*

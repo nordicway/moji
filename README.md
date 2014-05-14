@@ -1,7 +1,8 @@
 ## MOJI
 
-MOJI is an unofficial client for the MOSS plagiarism detection service,
-written in Java.
+MOJI is an unofficial Java client for the
+ <a href="http://theory.stanford.edu/~aiken/moss/">Moss</a> plagiarism detection
+  service.
 It has the following key features:
 
 - Pure Java implementation with few dependencies
@@ -9,7 +10,8 @@ It has the following key features:
 
 ## Requirements
 
-Java 6 or better
+- Java 6 or better
+- Apache Commons IO 2.3
 
 ## Installation
 
@@ -24,7 +26,7 @@ Then include it in your Java project.
 
 ### 1. Preparation
 
-MOJI requires some kind of MOSS-compatible directory structure to distinguish
+MOJI requires some kind of Moss-compatible directory structure to distinguish
 between different students.
 
 To achieve this, copy all student source codes to a directory where each
@@ -44,26 +46,33 @@ A valid directory containing student solutions might look like this:
 
 ### 2. Download the JAR (or build it yourself) and include it in your project.
 
-### 3. Create a new socket client object to communicate with the MOSS server.
+### 3. Create a new socket client object to communicate with the Moss server.
 
 ## Example code
 
 	import java.io.File;
-	import java.util.List;
+	import java.util.Collection;
 	import java.net.URL;
-
+	import org.apache.commons.io.FileUtils;
+	import it.zielke.moji.SocketClient;
+	
 	public class QuickStart {
 		public static void main(String[] args) throws Exception {
-			//a list of students' source code files located in the prepared
-			//directory.
+			// a list of students' source code files located in the prepared
+			// directory.
+			Collection<File> files = FileUtils.listFiles(new File(
+				"C:\\temp\\solution_directory"), new String[] { "java" }, true);
+
+			// a list of base files that was given to the students for this
+			// assignment.
+			Collection<File> baseFiles = FileUtils.listFiles(new File(
+				"C:\\temp\\base_directory"), new String[] { "java" }, true);
 			
-			//List<File> files = ...;
-			
-			//get a new socket client to communicate with the MOSS server
+			//get a new socket client to communicate with the Moss server
 			//and set its parameters.
 			SocketClient socketClient = new SocketClient();
 			
-			//set your MOSS user ID
+			//set your Moss user ID
 			socketClient.setUserID("123456789");
 			//socketClient.setOpt...
 			
@@ -73,6 +82,11 @@ A valid directory containing student solutions might look like this:
 			//initialize connection and send parameters
 			socketClient.run();
 			
+			// upload all base files
+			for (File f : baseFiles) {
+				socketClient.uploadBaseFile(f);
+			}
+			
 			//upload all source files of students
 			for (File f : files) {
 				socketClient.uploadFile(f);
@@ -81,7 +95,7 @@ A valid directory containing student solutions might look like this:
 			//finished uploading, tell server to check files
 			socketClient.sendQuery();
 			
-			//get URL with MOSS results and do something with it
+			//get URL with Moss results and do something with it
 			URL results = socketClient.getResultURL();
 			System.out.println("Results available at " + results.toString());
 		}
@@ -99,8 +113,10 @@ To execute all tests, simply run
 
 ## Attribution
 
-This software communicates with MOSS by Alex Aiken of Stanford University.
-MOJI is not in any way affiliated with MOSS.
+This software communicates with
+ <a href="http://theory.stanford.edu/~aiken/moss/">Moss</a> by Alex Aiken of
+  Stanford University.
+MOJI is not in any way affiliated with Moss.
 
 ## License
 

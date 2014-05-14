@@ -7,6 +7,14 @@
 
   <body>
   <section name="Changelog">
+  <p>Dates are m/d/yyyy</p>
+      <subsection name="5/4/2014: 1.0">
+          <ul>
+              <li>Added base file support</li>
+              <li>Added an example project for Eclipse</li>
+			  <li>Bumped version to 1.0 since it has been used in production for a long time now.</li>
+          </ul>
+    </subsection>
       <subsection name="1/9/2013: 0.1">
           <ul>
               <li>Initial public release</li>

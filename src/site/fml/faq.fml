@@ -13,7 +13,6 @@
         <li>MOJI works cross-platform. Including Windows, where the original client requires some modifications to run properly.</li>
         <li>MOJI is better suited for integration into an already existing online e-Learning system, especially if that system is Java based. It has exception handling and can be deployed using Maven.</li>
         <li>MOJI, internally, uses directory mode only. This detail should be negligible if you are starting from scratch. But please keep it in mind when porting your application from the Perl client.</li>
-        <li>MOJI does not support uploading base files (yet). You can use <em>optM</em> to fine tune matches against base code which is supplied to students for an assignment.</li>
         <li>MOJI uses Java as its default language for programming sources.</li>
         </ul>
          <p>
