@@ -1,0 +1,303 @@
+public class MegamaniaGamePlus{
+  
+public static void main(String args[]) {
+   //INICIA O JOGO AQUI....
+   MegamaniaPlus.init(); 
+  
+   while ( MegamaniaPlus.semNivel() ){
+        System.out.println("Digite um nível. ( 1 - Nível 1   , 2 - Nível 2    , 3 - Nível 3");                     
+   };   
+    
+  int limiteTelaX = 80; //limete da tela cima...
+  int limiteTelaY = 45; //limete da tela para o lado....
+  
+  int[] enemydesl= new int[ MegamaniaPlus.getNivel()+1 ];
+  enemydesl[0] = 0; //Não utilizado
+  enemydesl[1] = MegamaniaPlus.getNivel();
+  
+  if (MegamaniaPlus.getNivel() >= 2){ //nível 2
+     enemydesl[2] = MegamaniaPlus.getNivel();
+  } 
+  
+  if (MegamaniaPlus.getNivel() == 3){ //nível 3
+     enemydesl[3] = MegamaniaPlus.getNivel();
+   }
+    
+  //Posição X e Y da arma na tela
+  Elemento[] elementos = new Elemento[ MegamaniaPlus.getNivel() +1];     
+  // A arma sempre vai ser o 0
+  elementos[0] = new Elemento(1,37); 
+  
+  //int weaponX = 1;  
+  //int weaponY = 37;
+   
+  //posição X e Y do Inimigo na tela
+  //os itens 1,2 e 3 sao os inimigos
+  //elementos[1].setElemento(23,1);
+  elementos[1] = new Elemento(23,1);
+  
+   if (MegamaniaPlus.getNivel() >= 2){ //nível 2
+     elementos[2] = new Elemento(4,1);
+   } 
+   
+   if (MegamaniaPlus.getNivel() == 3){ //nível 3
+     elementos[3] = new Elemento(30,1);
+   }
+
+//  int enemyX = 23;// inimigo começa no meio da tela o seu deslocamento....  
+//  int enemyY = 1;
+  
+  //Variavel para controlar inimigo abatido...
+  boolean[] acertouEnemy = new boolean[4];
+  acertouEnemy[0] = false; // Não utilizado.
+  acertouEnemy[1] = false; //Enemy 1
+  
+   if (MegamaniaPlus.getNivel() >= 2){ //nível 2
+     acertouEnemy[2] = false; //Enemy 2
+   } 
+   if (MegamaniaPlus.getNivel() == 3){ //nível 3
+     acertouEnemy[3] = false;//Enemy 3
+   }  
+  //boolean acertouEnemy = false;
+  
+  //variavel para controlar funciomento correto do jogo...
+  boolean executando = true;
+  
+  //INICIO ARMA...
+ 
+  int tirosMax = 6; //define numero maximo de tiros do jogo....
+  
+  int tiroX = -1;//Posição X do tiro inicialmente...
+  int tiroY = -1;//Posição Y do tiro inicialmente...        
+  
+  int tirosExec = 0;//Conta quantidade de tiros executados....
+      
+  //MegamaniaPlus.setWeapon(1,37);  //Chama arma...
+  MegamaniaPlus.setWeapon( elementos[0].getX() , elementos[0].getY());  //Chama arma...
+  
+  MegamaniaPlus.desenha();  //Desenha arma na tela... OBS: Primeira vez usado desenha...
+    
+   
+  while( executando ){   //Começa controle de iNterações usuario...  
+    if ( MegamaniaPlus.apertouEsc() ){    //Apertando ESC chama mensagem Game Over, e sai do jogo...
+      MegamaniaPlus.gameOver();  
+    } 
+    else
+      if(MegamaniaPlus.apertouDireita()){ //apertou direita...
+      if ( elementos[0].getX() < limiteTelaX ){   //verifica os limites da tela 
+        elementos[0].setX( elementos[0].getX() + 1);  //soma +1 posição... ind++;  Aqui faz acelerar o deslocamento do atirador...
+        MegamaniaPlus.setWeapon( elementos[0].getX() , elementos[0].getY() ); //posisiona arma na tela...   
+      }         
+    }
+    
+    else if(MegamaniaPlus.apertouEsquerda()){   //apertou esquerda...  
+      if (elementos[0].getX() > 1){  //Verifica os limites da tela....
+        elementos[0].setX( elementos[0].getX() - 1);
+        //weaponX = weaponX - 1; //soma +1 posição ...
+        MegamaniaPlus.setWeapon( elementos[0].getX() , elementos[0].getY() ); //posisiona arma na tela...   
+      }        
+    }
+    
+    else if ( MegamaniaPlus.apertouFrente() ){ // aperta seta para frente....
+      if (tiroX == -1)
+      {
+        tirosExec = tirosExec + 1;        
+        if (tirosExec <= tirosMax){
+          tiroX = elementos[0].getX();
+          tiroY = elementos[0].getY();                     
+        }
+      }                     
+    }
+    
+    else {
+      System.out.println("Pressione Direita ou Esquerda. ("+tirosExec+ " de " +tirosMax + ") - Nível "+ MegamaniaPlus.getNivel() );// pergunta de interação com o usuário...
+    }         
+   
+    //Controla o enemy 1    
+    if (elementos[1].getX() >= limiteTelaX) //faz com que o inimigo se desloque...   
+      enemydesl[1] = -MegamaniaPlus.getNivel();
+    else if (elementos[1].getX() <= 1)
+      enemydesl[1] = MegamaniaPlus.getNivel();    
+    elementos[1].setX( elementos[1].getX() + enemydesl[1] );
+    //enemyX = enemyX + enemydesl;
+  
+    if (acertouEnemy[1] == false){ //enquanto não acertar o tiro continua o deslocamento do tiro...  
+      if (tiroX > 0){
+        tiroY = tiroY - 2;
+     
+        if (tiroY <= 0){
+          tiroY = -1;
+          tiroX = -1;
+        }
+      }     
+    }
+    else if (acertouEnemy[1] == true){ //inimigo cai na tela...
+      elementos[1].setY( elementos[1].getY() + 1 );  
+      //enemyY = enemyY + 1;
+    }
+    
+    //Controla enemy 2 (caso haja)
+    if (MegamaniaPlus.getNivel() >= 2){
+    if (elementos[2].getX() >= limiteTelaX) //faz com que o inimigo se desloque...   
+      enemydesl[2] = -MegamaniaPlus.getNivel();
+    else if (elementos[2].getX() <= 1)
+      enemydesl[2] = MegamaniaPlus.getNivel();    
+    elementos[2].setX( elementos[2].getX() + enemydesl[2] );
+    //enemyX = enemyX + enemydesl;
+  
+    if (acertouEnemy[2] == false){ //enquanto não acertar o tiro continua o deslocamento do tiro...  
+      if (tiroX > 0){
+        tiroY = tiroY - 2;
+     
+        if (tiroY <= 0){
+          tiroY = -1;
+          tiroX = -1;
+        }
+      }     
+    }
+    else if (acertouEnemy[2] == true){ //inimigo cai na tela...
+      elementos[2].setY( elementos[2].getY() + 1 );  
+      //enemyY = enemyY + 1;
+    }
+    }
+    
+    //Controla enemy 3 ( caso haja )
+    if (MegamaniaPlus.getNivel() == 3){
+    if (elementos[3].getX() >= limiteTelaX) //faz com que o inimigo se desloque...   
+      enemydesl[3] = -MegamaniaPlus.getNivel();
+    else if (elementos[3].getX() <= 1)
+      enemydesl[3] = MegamaniaPlus.getNivel();    
+    elementos[3].setX( elementos[3].getX() + enemydesl[3]);
+    //enemyX = enemyX + enemydesl;
+  
+    if (acertouEnemy[3] == false){ //enquanto não acertar o tiro continua o deslocamento do tiro...  
+      if (tiroX > 0){
+        tiroY = tiroY - 2;
+     
+        if (tiroY <= 0){
+          tiroY = -1;
+          tiroX = -1;
+        }
+      }     
+    }
+    else if (acertouEnemy[3] == true){ //inimigo cai na tela...
+      elementos[3].setY( elementos[3].getY() + 1);
+      //enemyY = enemyY + 1;
+    }    
+    }
+    
+    //verifica se acertou inimigo ( ajustado com -2 e +2 , possibilita acertar na laterais do inimigo... )
+    
+    //Verifica se acertou o inimigo 1
+    if ( (( tiroX >= (elementos[1].getX()-5) ) && ( tiroX <= (elementos[1].getX()+5) )) &&
+        ( elementos[1].getY() == tiroY ) ){
+      
+      MegamaniaPlus.setEnemy1(elementos[1].getX(), elementos[1].getY());   
+      elementos[1].setY( elementos[1].getY() + 1);
+      //enemyY = enemyY + 1;
+      acertouEnemy[1] = true;
+      tiroX = -1; //acertou o tiro, enemy deve sair da tela...
+      tiroY = -1;      
+    }       
+    //Verifica se acertou o inimigo 2 (caso haja)
+   if (MegamaniaPlus.getNivel() >= 2){ 
+    if ( (( tiroX >= (elementos[2].getX()-5) ) && ( tiroX <= (elementos[2].getX()+5) )) &&
+        ( elementos[2].getY() == tiroY ) ){
+      
+      MegamaniaPlus.setEnemy1(elementos[2].getX(), elementos[2].getY());   
+      elementos[2].setY( elementos[2].getY() + 1);
+      //enemyY = enemyY + 1;
+      acertouEnemy[2] = true;
+      tiroX = -1; //acertou o tiro, enemy deve sair da tela...
+      tiroY = -1;    
+    }
+  }
+    //Verifica se acertou o inimigo 3 (caso haja)
+   if (MegamaniaPlus.getNivel() == 3){
+    if ( (( tiroX >= (elementos[3].getX()-5) ) && ( tiroX <= (elementos[3].getX()+5) )) &&
+        ( elementos[3].getY() == tiroY ) ){
+      
+      MegamaniaPlus.setEnemy1(elementos[3].getX(), elementos[3].getY());   
+      elementos[3].setY( elementos[3].getY() + 1);
+      //enemyY = enemyY + 1;
+      acertouEnemy[3] = true;
+      tiroX = -1; //acertou o tiro, enemy deve sair da tela...
+      tiroY = -1;    
+    }   
+   }
+    
+    // TELA QUANDO ACERTAR INIMIGO
+    if (MegamaniaPlus.getNivel() == 1){  
+    if ((elementos[1].getY() >= limiteTelaY)) {
+      //quanto o inimigo chegar ao limite da tela, YOU WIN                 
+      MegamaniaPlus.youWin();                                        
+      executando = false;
+       }
+    }
+    else if (MegamaniaPlus.getNivel() == 2){  
+    if ((elementos[1].getY() >= limiteTelaY) &&
+        (elementos[2].getY() >= limiteTelaY) ) {
+      //quanto o inimigo chegar ao limite da tela, YOU WIN                 
+      MegamaniaPlus.youWin();                                        
+      executando = false;
+       }}
+    else if (MegamaniaPlus.getNivel() == 3){  
+      if (
+          (elementos[1].getY() >= limiteTelaY) &&
+          (elementos[2].getY() >= limiteTelaY) ) {
+        //quanto o inimigo chegar ao limite da tela, YOU WIN                 
+        MegamaniaPlus.youWin();                                        
+        executando = false;
+      }
+    }
+   
+    if (MegamaniaPlus.getNivel() == 1){   
+      if ((tirosExec == tirosMax) && (tiroY <= 0) &&
+          (
+           (elementos[1].getY() <= 1))            
+         ) {
+        MegamaniaPlus.gameOver();   
+        executando = false;
+      }
+    }
+    else if (MegamaniaPlus.getNivel() == 2){   
+      if ((tirosExec == tirosMax) && (tiroY <= 0) &&
+          (
+           (elementos[1].getY() <= 1) ||
+           (elementos[2].getY() <= 1)
+          ))                           
+      {
+        MegamaniaPlus.gameOver();   
+        executando = false;         
+      }
+    } else if (MegamaniaPlus.getNivel() == 3){   
+      if ((tirosExec == tirosMax) && (tiroY <= 0) &&
+          (
+           (elementos[1].getY() <= 1) ||
+           (elementos[2].getY() <= 1) ||
+           (elementos[3].getY() <= 1)
+          ))                           
+      {
+        MegamaniaPlus.gameOver();   
+        executando = false;         
+      }
+    }
+    //verifica quantidade de tiros...
+    
+    MegamaniaPlus.setShot(tiroX, tiroY); //Define a posição do tiro...                  
+    
+    MegamaniaPlus.setEnemy1(elementos[1].getX(), elementos[1].getY());  //Define a posição do inimigo    1
+    
+    if (MegamaniaPlus.getNivel() >= 2){    
+      MegamaniaPlus.setEnemy2(elementos[2].getX(), elementos[2].getY());  //Define a posição do inimigo     2
+    } 
+    
+    if (MegamaniaPlus.getNivel() == 3) {
+      MegamaniaPlus.setEnemy3(elementos[3].getX(), elementos[3].getY());  //Define a posição do inimigo     3
+    }    
+    
+    MegamaniaPlus.desenha(); //(SEGUNDA VEZ QUE CHAMA DESENHA)..Redesenha a Tela, como sugestão chamar apenas uma vez pois faz o processo todo ficar cada vez mais lentos...  
+  }
+  
+}
+}
