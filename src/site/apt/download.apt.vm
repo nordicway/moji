@@ -1,4 +1,14 @@
+            --------
+            Download
+            --------
+
 Download
 
-
  * {{{./downloads/moji-${project.version}.jar}Download MOJI ${project.version} JAR}}
+ 
+ * {{{./downloads/moji-${project.version}-javadoc.jar}Download MOJI ${project.version} Javadoc JAR}}
+ 
+ * {{{./downloads/moji-${project.version}-sources.jar}Download MOJI ${project.version} Sources JAR}}
+ 
+ 
+ If you don't know the difference between these files, just download the first one.

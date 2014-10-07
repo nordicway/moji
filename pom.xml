@@ -6,11 +6,11 @@
         <version>1.0.0</version>
         <name>MOJI</name>
         <description>
-MOJI is an unofficial client for the MOSS plagiarism detection service. It allows you to check source codes of students for plagiarism or collusion.
-MOJI has the following key features:
-- Pure Java implementation with few dependencies
-- Cross-platform support
-</description>
+        MOJI is an unofficial client for the MOSS plagiarism detection service. It allows you to check source codes of students for plagiarism or collusion.
+        MOJI has the following key features:
+        - Pure Java implementation with few dependencies
+        - Cross-platform support
+        </description>
         <inceptionYear>2012</inceptionYear>
         <url>http://www.zielke.it/moji/</url>
         <properties>
@@ -80,7 +80,6 @@ MOJI has the following key features:
                                         </reportSet>
                                 </reportSets>
                         </plugin>
-
                 </plugins>
         </reporting>
         <licenses>
@@ -97,36 +96,76 @@ MOJI has the following key features:
                         <timezone>+2</timezone>
                 </developer>
         </developers>
+        <scm>
+            <connection>scm:git:git@github.com:nordicway/moji.git</connection>
+            <developerConnection>scm:git:git@github.com:nordicway/moji.git</developerConnection>
+            <url>git@github.com:nordicway/moji.git</url>
+        </scm>
         <build>
                 <plugins>
+                        <plugin>
+                        <artifactId>maven-site-plugin</artifactId>
+                        <version>3.4</version>
+                          <executions>
+                          <execution>
+                            <id>attach-descriptor</id>
+                            <goals>
+                              <goal>attach-descriptor</goal>
+                            </goals>
+                          </execution>
+                          </executions>
+                        </plugin>
+                        <plugin>
+                          <groupId>org.apache.maven.plugins</groupId>
+                          <artifactId>maven-source-plugin</artifactId>
+                          <version>2.3</version>
+                          <executions>
+                            <execution>
+                              <id>attach-sources</id>
+                              <goals>
+                                <goal>jar</goal>
+                              </goals>
+                            </execution>
+                          </executions>
+                        </plugin>
+                        <plugin>
+                          <groupId>org.apache.maven.plugins</groupId>
+                          <artifactId>maven-javadoc-plugin</artifactId>
+                          <version>2.10.1</version>
+                          <executions>
+                            <execution>
+                              <id>attach-javadocs</id>
+                              <goals>
+                                <goal>jar</goal>
+                              </goals>
+                            </execution>
+                          </executions>
+                        </plugin>
                         <plugin>
                                 <groupId>org.codehaus.mojo</groupId>
                                 <artifactId>findbugs-maven-plugin</artifactId>
                                 <version>2.5.2</version>
                         </plugin>
-						<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>2.5.2</version>
-			</plugin>
-			<plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-		<version>1.7</version>
-        <executions>
-          <execution>
-            <phase>site</phase>
-            <configuration>
-              <tasks>
-                <mkdir dir="target/site/downloads"/>
-				<copy file="target/${project.build.finalName}.${project.packaging}" todir="target/site/downloads"/>
-              </tasks>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-                </plugins>
-        </build>
+                        <plugin>
+                            <artifactId>maven-antrun-plugin</artifactId>
+                            <version>1.7</version>
+                            <executions>
+                              <execution>
+                                <phase>site</phase>
+                                <configuration>
+                                  <tasks>
+                                    <mkdir dir="target/site/downloads"/>
+                                    <copy file="target/${project.build.finalName}.${project.packaging}" todir="target/site/downloads"/>
+                                    <copy file="target/${project.build.finalName}-javadoc.${project.packaging}" todir="target/site/downloads"/>
+                                    <copy file="target/${project.build.finalName}-sources.${project.packaging}" todir="target/site/downloads"/>
+                                  </tasks>
+                                </configuration>
+                                <goals>
+                                  <goal>run</goal>
+                                </goals>
+                              </execution>
+                            </executions>
+                        </plugin>
+        </plugins>
+    </build>
 </project>

@@ -317,7 +317,7 @@ public class SocketClient {
 	 * Sends a command to the server to define the programming language of all
 	 * source files. The language must be set beforehand using setLanguage().
 	 * 
-	 * @see this{@link #setLanguage(String)}
+	 * @see it.zielke.moji.SocketClient#setLanguage(String)
 	 * @throws MossException
 	 *             if this language is not supported by the MOSS server
 	 * @throws IOException
