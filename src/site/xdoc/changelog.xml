@@ -8,6 +8,12 @@
   <body>
   <section name="Changelog">
   <p>Dates are m/d/yyyy</p>
+      <subsection name="10/9/2014: 1.0.1">
+          <ul>
+              <li>This is a maintenance release without any changes in functionality.</li>
+			  <li>MOJI is now on Maven Central!</li>
+          </ul>
+    </subsection>
       <subsection name="5/4/2014: 1.0">
           <ul>
               <li>Added base file support</li>

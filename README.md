@@ -15,12 +15,21 @@ It has the following key features:
 
 ## Installation
 
-Either
+Use either of the following methods to obtain a MOJI binary.
 
-- download the JAR or
-- build it yourself using Maven.
+- add as Maven dependency:
 
-Then include it in your Java project.
+
+    <dependency>
+        <groupId>it.zielke</groupId>
+        <artifactId>moji</artifactId>
+        <version>1.0.1</version>
+    </dependency>
+    
+
+- download the JAR and include it in your Java project.
+
+- build it yourself using Maven and include the JAR in your Java project.
 
 ## Quick Start
 
