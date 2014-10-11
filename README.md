@@ -19,13 +19,12 @@ Use either of the following methods to obtain a MOJI binary.
 
 - add as Maven dependency:
 
+		<dependency>
+			<groupId>it.zielke</groupId>
+			<artifactId>moji</artifactId>
+			<version>1.0.1</version>
+		</dependency>
 
-    <dependency>
-        <groupId>it.zielke</groupId>
-        <artifactId>moji</artifactId>
-        <version>1.0.1</version>
-    </dependency>
-    
 
 - download the JAR and include it in your Java project.
 
