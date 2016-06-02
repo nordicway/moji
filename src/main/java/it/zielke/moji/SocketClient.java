@@ -125,6 +125,7 @@ public class SocketClient {
 			throw new RuntimeException("Client is already connected");
 		}
 		socket = new Socket(this.server, this.port);
+		socket.setKeepAlive(true);
 		out = new SocketPrintWriter(socket.getOutputStream(), true);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream(),
 				Charsets.US_ASCII));
@@ -378,8 +379,9 @@ public class SocketClient {
 		sendCommand(String.format("%s %d %s", "query", 0, optC));
 		currentStage = Stage.AWAITING_RESULTS;
 		// Query submitted, waiting for server's response
-		String result = readFromServer().trim();
-		if (result.toLowerCase(Locale.ENGLISH).startsWith("http")) {
+		String result = readFromServer();
+		if (null != result
+				&& result.toLowerCase(Locale.ENGLISH).startsWith("http")) {
 			try {
 				this.resultURL = new URL(result.trim());
 			} catch (MalformedURLException e) {
@@ -516,16 +518,14 @@ public class SocketClient {
 	 * @throws IOException
 	 *             if the file could not be read
 	 */
-	@edu.umd.cs.findbugs.annotations.SuppressWarnings(
-			value = "VA_FORMAT_STRING_USES_NEWLINE",
-			justification = "We do want platform-independent newline here.")
+	@edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "VA_FORMAT_STRING_USES_NEWLINE", justification = "We do want platform-independent newline here.")
 	public void uploadFile(File file, boolean isBaseFile) throws IOException {
 		if (currentStage != Stage.AWAITING_FILES
 				&& currentStage != Stage.AWAITING_QUERY) {
 			throw new RuntimeException(
 					"Cannot upload file. Client is either not initialized properly or the connection is already closed");
 		}
-		String fileString = FileUtils.readFileToString(file);
+		String fileString = FileUtils.readFileToString(file, Charsets.UTF_8);
 		// replace to get Unix-style line endings and the same count as the
 		// Perl script
 		fileString = fileString.replace("\r\n", "\n");
@@ -539,7 +539,7 @@ public class SocketClient {
 				 * non-local files, e.g. on network shares
 				 */
 				file.getAbsolutePath().replace("\\", "/")); // 4. file path
-
+		System.out.println("uploading file: " + file.getAbsolutePath());
 		out.printf(uploadString);
 		out.print(fileString);
 
