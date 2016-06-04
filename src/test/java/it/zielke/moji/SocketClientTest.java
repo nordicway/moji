@@ -33,6 +33,9 @@ public class SocketClientTest {
 			mockServer.setPort(testPort);
 			ms.setDaemon(true);
 			ms.start();
+			while (!mockServer.isBound()) {
+				Thread.sleep(10);
+			}
 			socketClient = new SocketClient();
 			socketClient.setServer(TEST_IP);
 			socketClient.setPort(testPort);

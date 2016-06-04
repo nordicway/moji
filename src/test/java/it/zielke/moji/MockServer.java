@@ -116,6 +116,10 @@ public class MockServer implements Runnable {
 		}
 	}
 
+	public boolean isBound() {
+		return (this.ss != null && this.ss.isBound());
+	}
+
 	public int getPort() {
 		return port;
 	}
