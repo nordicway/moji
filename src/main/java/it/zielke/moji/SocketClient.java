@@ -285,7 +285,6 @@ public class SocketClient {
 			}
 		}
 		out.println(sb.toString());
-		out.flush();
 
 		return sb.toString();
 	}
@@ -540,7 +539,7 @@ public class SocketClient {
 				 */
 				file.getAbsolutePath().replace("\\", "/")); // 4. file path
 		System.out.println("uploading file: " + file.getAbsolutePath());
-		out.printf(uploadString);
+		out.print(uploadString);
 		out.print(fileString);
 
 		currentStage = Stage.AWAITING_QUERY;
