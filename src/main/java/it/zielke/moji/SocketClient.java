@@ -375,7 +375,7 @@ public class SocketClient {
 		if (setID == 1) {
 			throw new MossException("You did not upload any files yet");
 		}
-		sendCommand(String.format("%s %d %s", "query", 0, optC));
+		sendCommand(String.format(Locale.ENGLISH, "%s %d %s", "query", 0, optC));
 		currentStage = Stage.AWAITING_RESULTS;
 		// Query submitted, waiting for server's response
 		String result = readFromServer();
@@ -529,7 +529,8 @@ public class SocketClient {
 		// Perl script
 		fileString = fileString.replace("\r\n", "\n");
 
-		String uploadString = String.format("file %d %s %d %s\n", // format:
+		String uploadString = String.format(Locale.ENGLISH,
+				"file %d %s %d %s\n", // format:
 				isBaseFile ? 0 : getIncSetID(), // 1. setID
 				language, // 2. language
 				fileString.getBytes(Charsets.US_ASCII).length, // 3. size
