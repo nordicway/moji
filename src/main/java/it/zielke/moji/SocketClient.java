@@ -1,9 +1,11 @@
 package it.zielke.moji;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
@@ -44,7 +46,7 @@ public class SocketClient {
 			"ascii", "vhdl", "perl", "matlab", "python", "mips", "prolog",
 			"spice", "vb", "csharp", "modula2", "a8086", "javascript", "plsql");
 
-	private SocketPrintWriter out;
+	private OutputStream out;
 	private BufferedReader in;
 
 	/**
@@ -126,7 +128,7 @@ public class SocketClient {
 		}
 		socket = new Socket(this.server, this.port);
 		socket.setKeepAlive(true);
-		out = new SocketPrintWriter(socket.getOutputStream(), true);
+		out = new ByteArrayOutputStream();
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream(),
 				Charsets.US_ASCII));
 		currentStage = Stage.AWAITING_INITIALIZATION;
@@ -284,7 +286,13 @@ public class SocketClient {
 				sb.append(" ");
 			}
 		}
-		out.println(sb.toString());
+		sb.append("\n");
+		try {
+			out.write(sb.toString().getBytes(Charsets.US_ASCII));
+			out.flush();
+		} catch (IOException e) {
+			throw new MossException("Failed to send command: " + e.getMessage());
+		}
 
 		return sb.toString();
 	}
@@ -540,8 +548,8 @@ public class SocketClient {
 				 */
 				file.getAbsolutePath().replace("\\", "/")); // 4. file path
 		System.out.println("uploading file: " + file.getAbsolutePath());
-		out.print(uploadString);
-		out.print(fileString);
+		out.write(uploadString.getBytes(Charsets.US_ASCII));
+		out.write(FileUtils.readFileToByteArray(file));
 
 		currentStage = Stage.AWAITING_QUERY;
 

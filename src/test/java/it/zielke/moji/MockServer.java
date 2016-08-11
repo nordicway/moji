@@ -1,19 +1,21 @@
 package it.zielke.moji;
 
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
+import java.nio.ByteBuffer;
+
+import org.apache.commons.io.IOUtils;
 
 public class MockServer implements Runnable {
 	private boolean shutdown;
 	private int port = 7690;
 	private ServerSocket ss;
-	private BufferedReader in;
+	private InputStream in;
 	private BufferedWriter out;
 
 	private String userID;
@@ -26,7 +28,14 @@ public class MockServer implements Runnable {
 	private String optC;
 	private String resultURL = "http://moss.stanford.edu/results/20132013";
 
+	// expected results for test
+	ByteBuffer expectedBytes;
+
 	public MockServer() {
+	}
+
+	public void setExpectedBytes(byte[] expectedBytes) {
+		this.expectedBytes = ByteBuffer.wrap(expectedBytes);
 	}
 
 	private void status(String s) {
@@ -34,13 +43,15 @@ public class MockServer implements Runnable {
 	}
 
 	public void waitForCommand() throws Exception {
-		String s = "";
+		String s = null;
 		try {
-			s = in.readLine();
-		} catch (SocketTimeoutException et) {
-
+			StringBuilder sb = new StringBuilder();
+			for (int read = in.read(); read >= 0 && read != 10; read = in
+					.read()) {
+				sb.append(Character.toString((char) read));
+			}
+			s = sb.toString();
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
 		if (s != null) {
@@ -73,13 +84,51 @@ public class MockServer implements Runnable {
 		} else if (command.equals("X")) {
 			this.setOptX(Integer.parseInt(parameter));
 		} else if (command.equals("file")) {
-			// ignore uploaded files
+			checkFileUpload(parameter);
 		} else if (command.equals("query")) {
 			out.write(this.resultURL + "\n");
 			out.flush();
 			status("sent url: " + this.resultURL);
 		} else if (command.trim().equals("end")) {
 			this.shutdown = true;
+		}
+	}
+
+	public void checkFileUpload(String fileUploadString) {
+		String[] parts = fileUploadString.split(" ");
+		int id = Integer.valueOf(parts[0]);
+		String language = parts[1];
+		int size = Integer.valueOf(parts[2]);
+		String fileName = parts[3];
+
+		checkFileBytes(size);
+	}
+
+	public void checkFileBytes(int expectedSize) {
+		byte[] b = null;
+		try {
+			b = IOUtils.toByteArray(this.in, expectedSize);
+		} catch (IOException e) {
+			endConnection();
+			throw new RuntimeException(e);
+		}
+		ByteBuffer buffer = ByteBuffer.wrap(b);
+		if (buffer == null
+				|| (expectedBytes != null && !buffer.equals(this.expectedBytes))) {
+			endConnection();
+			throw new RuntimeException(
+					String.format(
+							"Error during file upload: expected number of bytes do not match the actual number of bytes. Expected bytes: %d, actual bytes: %d",
+							this.expectedBytes, b == null ? "n/a" : b.length));
+		}
+	}
+
+	public void endConnection() {
+		try {
+			this.in.close();
+			this.out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -95,7 +144,7 @@ public class MockServer implements Runnable {
 			s.setKeepAlive(true);
 			s.setSoTimeout(5000);
 			status("accepted connection - remote port: " + s.getPort());
-			in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			in = new BufferedInputStream(s.getInputStream());
 			out = new BufferedWriter(
 					new OutputStreamWriter(s.getOutputStream()));
 			while (!shutdown) {
