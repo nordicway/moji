@@ -1,7 +1,6 @@
 package it.zielke.moji;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -17,6 +17,7 @@ import java.util.Vector;
 
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * Client for communicating with the MOSS server socket. Handles the
@@ -128,7 +129,7 @@ public class SocketClient {
 		}
 		socket = new Socket(this.server, this.port);
 		socket.setKeepAlive(true);
-		out = new ByteArrayOutputStream();
+		out = socket.getOutputStream();
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream(),
 				Charsets.US_ASCII));
 		currentStage = Stage.AWAITING_INITIALIZATION;
@@ -286,9 +287,13 @@ public class SocketClient {
 				sb.append(" ");
 			}
 		}
-		sb.append("\n");
+		sb.append('\n');
 		try {
-			out.write(sb.toString().getBytes(Charsets.US_ASCII));
+			byte[] bytes = (sb.toString()).getBytes(Charsets.US_ASCII);
+			out.write(bytes);
+			System.out.println("sending command: " + sb.toString());
+			System.out.println("sending command: "
+					+ javax.xml.bind.DatatypeConverter.printHexBinary(bytes));
 			out.flush();
 		} catch (IOException e) {
 			throw new MossException("Failed to send command: " + e.getMessage());
@@ -532,27 +537,31 @@ public class SocketClient {
 			throw new RuntimeException(
 					"Cannot upload file. Client is either not initialized properly or the connection is already closed");
 		}
-		String fileString = FileUtils.readFileToString(file, Charsets.UTF_8);
-		// replace to get Unix-style line endings and the same count as the
-		// Perl script
-		fileString = fileString.replace("\r\n", "\n");
-
+		byte[] fileBytes = FileUtils.readFileToByteArray(file);
+		String filename = normalizeFilename(file.getAbsolutePath());
 		String uploadString = String.format(Locale.ENGLISH,
 				"file %d %s %d %s\n", // format:
 				isBaseFile ? 0 : getIncSetID(), // 1. setID
 				language, // 2. language
-				fileString.getBytes(Charsets.US_ASCII).length, // 3. size
+				fileBytes.length, // 3. size
 				/*
 				 * Use Unix-style path to remain consistent. TODO test this with
 				 * non-local files, e.g. on network shares
 				 */
-				file.getAbsolutePath().replace("\\", "/")); // 4. file path
-		System.out.println("uploading file: " + file.getAbsolutePath());
+				filename); // 4. file path
+		System.out.println("uploading file: " + filename);
 		out.write(uploadString.getBytes(Charsets.US_ASCII));
-		out.write(FileUtils.readFileToByteArray(file));
+		out.write(fileBytes);
 
 		currentStage = Stage.AWAITING_QUERY;
 
+	}
+
+	public String normalizeFilename(String filename) {
+		String result = Normalizer.normalize(filename, Normalizer.Form.NFD);
+		result = FilenameUtils.normalizeNoEndSeparator(result, true)
+				.replaceAll("[^\\p{ASCII}]", "");
+		return result;
 	}
 
 }

@@ -1,7 +1,5 @@
 package it.zielke.moji;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -16,7 +14,7 @@ public class MockServer implements Runnable {
 	private int port = 7690;
 	private ServerSocket ss;
 	private InputStream in;
-	private BufferedWriter out;
+	private OutputStreamWriter out;
 
 	private String userID;
 	private String language;
@@ -46,12 +44,22 @@ public class MockServer implements Runnable {
 		String s = null;
 		try {
 			StringBuilder sb = new StringBuilder();
+			// int read = -1;
+			// do {
+			// read = in.read();
+			// status("read: " + read);
+			// sb.append((char) read);
+			// } while (read >= 0 && read != 10);
 			for (int read = in.read(); read >= 0 && read != 10; read = in
 					.read()) {
+				System.out.println("Char read: " + (char) read + " = int "
+						+ read);
 				sb.append(Character.toString((char) read));
 			}
 			s = sb.toString();
+			status("found command string: " + s);
 		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 
 		if (s != null) {
@@ -72,7 +80,7 @@ public class MockServer implements Runnable {
 				}
 			}
 		}
-
+		parameter = parameter.trim();
 		status("command: " + command + ", parameter: " + parameter);
 
 		if (command.equals("language")) {
@@ -141,13 +149,13 @@ public class MockServer implements Runnable {
 			}
 			status("listening for connection");
 			Socket s = ss.accept();
-			s.setKeepAlive(true);
-			s.setSoTimeout(5000);
+			// s.setKeepAlive(true);
+			// s.setSoTimeout(5000);
 			status("accepted connection - remote port: " + s.getPort());
-			in = new BufferedInputStream(s.getInputStream());
-			out = new BufferedWriter(
-					new OutputStreamWriter(s.getOutputStream()));
+			in = s.getInputStream();
+			out = new OutputStreamWriter(s.getOutputStream());
 			while (!shutdown) {
+				System.out.println("waiting for command");
 				waitForCommand();
 			}
 			status("shutting down");
@@ -185,11 +193,11 @@ public class MockServer implements Runnable {
 		this.ss = ss;
 	}
 
-	public BufferedWriter getOut() {
+	public OutputStreamWriter getOut() {
 		return out;
 	}
 
-	public void setOut(BufferedWriter out) {
+	public void setOut(OutputStreamWriter out) {
 		this.out = out;
 	}
 

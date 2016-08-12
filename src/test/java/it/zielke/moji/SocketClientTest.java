@@ -223,7 +223,7 @@ public class SocketClientTest {
 	public void testSendCommand() {
 
 		String[] commandString = { "language", "java" };
-		assertEquals("language java", sendStringCommands(commandString));
+		assertEquals("language java\n", sendStringCommands(commandString));
 
 		// TODO rewrite the whole test without using reflection
 		// Object[] commandObjects = { "directory", 1 };

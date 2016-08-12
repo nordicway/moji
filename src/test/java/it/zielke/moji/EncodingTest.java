@@ -60,7 +60,7 @@ public class EncodingTest {
 		}
 	}
 
-	private static String getDefaultCharSet() {
+	private String getDefaultCharSet() {
 		OutputStreamWriter writer = new OutputStreamWriter(
 				new ByteArrayOutputStream());
 		String enc = writer.getEncoding();
