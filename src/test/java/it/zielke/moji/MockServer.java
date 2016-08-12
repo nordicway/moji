@@ -44,16 +44,8 @@ public class MockServer implements Runnable {
 		String s = null;
 		try {
 			StringBuilder sb = new StringBuilder();
-			// int read = -1;
-			// do {
-			// read = in.read();
-			// status("read: " + read);
-			// sb.append((char) read);
-			// } while (read >= 0 && read != 10);
 			for (int read = in.read(); read >= 0 && read != 10; read = in
 					.read()) {
-				System.out.println("Char read: " + (char) read + " = int "
-						+ read);
 				sb.append(Character.toString((char) read));
 			}
 			s = sb.toString();
@@ -155,7 +147,7 @@ public class MockServer implements Runnable {
 			in = s.getInputStream();
 			out = new OutputStreamWriter(s.getOutputStream());
 			while (!shutdown) {
-				System.out.println("waiting for command");
+				status("waiting for command");
 				waitForCommand();
 			}
 			status("shutting down");

@@ -291,9 +291,6 @@ public class SocketClient {
 		try {
 			byte[] bytes = (sb.toString()).getBytes(Charsets.US_ASCII);
 			out.write(bytes);
-			System.out.println("sending command: " + sb.toString());
-			System.out.println("sending command: "
-					+ javax.xml.bind.DatatypeConverter.printHexBinary(bytes));
 			out.flush();
 		} catch (IOException e) {
 			throw new MossException("Failed to send command: " + e.getMessage());
