@@ -127,7 +127,7 @@ public class SocketClient {
 		socket = new Socket(this.server, this.port);
 		out = new SocketPrintWriter(socket.getOutputStream(), true);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream(),
-				Charsets.US_ASCII));
+				Charsets.UTF_8));
 		currentStage = Stage.AWAITING_INITIALIZATION;
 	}
 
@@ -141,7 +141,7 @@ public class SocketClient {
 	/**
 	 * Increment the set ID internally. Do not increment this manually unless
 	 * you have a good reason. Might be removed in the future.
-	 * 
+	 *
 	 * @return the last set ID, before this increment.
 	 */
 	@Deprecated
@@ -210,7 +210,7 @@ public class SocketClient {
 
 	/**
 	 * Read a single line of the server's response.
-	 * 
+	 *
 	 * @return the line read
 	 * @throws IOException
 	 *             if it was not possible to read from the socket
@@ -223,7 +223,7 @@ public class SocketClient {
 	 * Shortcut method to connect to the MOSS server, send all initialization
 	 * parameters and set the programming language of all source files. Call
 	 * this before uploading any files.
-	 * 
+	 *
 	 * @throws MossException
 	 *             if the MOSS server returns an error
 	 * @throws IOException
@@ -240,7 +240,7 @@ public class SocketClient {
 
 	/**
 	 * Generic function for sending all kinds of commands to the server.
-	 * 
+	 *
 	 * @param objects
 	 *            object array consisting of parameters which should be sent to
 	 *            the server
@@ -263,7 +263,7 @@ public class SocketClient {
 
 	/**
 	 * Generic function for sending all kinds of commands to the server.
-	 * 
+	 *
 	 * @param strings
 	 *            string array consisting of parameters which should be sent to
 	 *            the server
@@ -292,7 +292,7 @@ public class SocketClient {
 	/**
 	 * Sends initialization commands to the server. Needs to be called after
 	 * connecting to the server but before sending any files.
-	 * 
+	 *
 	 * @throws MossException
 	 */
 	public void sendInitialization() throws MossException {
@@ -316,7 +316,7 @@ public class SocketClient {
 	/**
 	 * Sends a command to the server to define the programming language of all
 	 * source files. The language must be set beforehand using setLanguage().
-	 * 
+	 *
 	 * @see it.zielke.moji.SocketClient#setLanguage(String)
 	 * @throws MossException
 	 *             if this language is not supported by the MOSS server
@@ -343,7 +343,7 @@ public class SocketClient {
 	/**
 	 * Sends a command to the server to define the programming language of all
 	 * source files.
-	 * 
+	 *
 	 * @param language
 	 *            the programming language of all source files
 	 * @throws MossException
@@ -360,7 +360,7 @@ public class SocketClient {
 	 * Sends a command to tell the server that all files have been uploaded and
 	 * the search for plagiarism can start. Waits for an answer from the server
 	 * which may take some minutes.
-	 * 
+	 *
 	 * @throws MossException
 	 *             if there is an error when receiving results from the MOSS
 	 *             server
@@ -396,7 +396,7 @@ public class SocketClient {
 
 	/**
 	 * Set the programming language of all source files.
-	 * 
+	 *
 	 * @param language
 	 *            the programming language in which source file is written in.
 	 *            Valid programming languages are: c, cc, java, ml, pascal, ada,
@@ -414,7 +414,7 @@ public class SocketClient {
 	/**
 	 * Sets a comment string which is attached to the MOSS report. Individual
 	 * reports can then easily be distinguished.
-	 * 
+	 *
 	 * @param optC
 	 *            comment string
 	 */
@@ -428,7 +428,7 @@ public class SocketClient {
 	 * base/template code usage within students' solutions while uploading base
 	 * code is unsupported by this client. Corresponds to the -m parameter of
 	 * the original client.
-	 * 
+	 *
 	 * @param optM
 	 *            times a passage may appear before it is ignored
 	 */
@@ -439,7 +439,7 @@ public class SocketClient {
 	/**
 	 * Sets how many matches should be displayed in the MOSS results. Default is
 	 * 250.
-	 * 
+	 *
 	 * @param optN
 	 *            how many matches to display
 	 */
@@ -450,7 +450,7 @@ public class SocketClient {
 	/**
 	 * Setting this value to 1 enables the experimental MOSS server. This is
 	 * pretty much untested. Default is 0.
-	 * 
+	 *
 	 * @param optX
 	 *            0 or 1. 0: regular MOSS server, 1: experimental MOSS server.
 	 */
@@ -472,7 +472,7 @@ public class SocketClient {
 
 	/**
 	 * Set the MOSS user id for authentication with the MOSS server.
-	 * 
+	 *
 	 * @param userID
 	 *            your personalized ID to authenticate with. It should look like
 	 *            /[0-9]+/ and is available on the MOSS page located at
@@ -484,7 +484,7 @@ public class SocketClient {
 
 	/**
 	 * Uploads a single file to the MOSS server.
-	 * 
+	 *
 	 * @param file
 	 *            the source code file to be uploaded
 	 * @throws IOException
@@ -496,7 +496,7 @@ public class SocketClient {
 
 	/**
 	 * Uploads a single base file to the MOSS server.
-	 * 
+	 *
 	 * @param file
 	 *            the base file to be uploaded
 	 * @throws IOException
@@ -508,7 +508,7 @@ public class SocketClient {
 
 	/**
 	 * Uploads a single file to the MOSS server.
-	 * 
+	 *
 	 * @param file
 	 *            the source code file to be uploaded
 	 * @param isBaseFile
@@ -533,7 +533,7 @@ public class SocketClient {
 		String uploadString = String.format("file %d %s %d %s\n", // format:
 				isBaseFile ? 0 : getIncSetID(), // 1. setID
 				language, // 2. language
-				fileString.getBytes(Charsets.US_ASCII).length, // 3. size
+				fileString.getBytes(Charsets.UTF_8).length, // 3. size
 				/*
 				 * Use Unix-style path to remain consistent. TODO test this with
 				 * non-local files, e.g. on network shares
