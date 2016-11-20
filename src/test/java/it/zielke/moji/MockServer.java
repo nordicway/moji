@@ -28,6 +28,8 @@ public class MockServer implements Runnable {
 
 	// expected results for test
 	ByteBuffer expectedBytes;
+	ByteBuffer receivedBytes;
+	String lastFileReceived;
 
 	public MockServer() {
 	}
@@ -102,9 +104,11 @@ public class MockServer implements Runnable {
 		String fileName = parts[3];
 
 		checkFileBytes(size);
+		lastFileReceived = fileName;
 	}
 
 	public void checkFileBytes(int expectedSize) {
+		receivedBytes = null;
 		byte[] b = null;
 		try {
 			b = IOUtils.toByteArray(this.in, expectedSize);
@@ -113,13 +117,17 @@ public class MockServer implements Runnable {
 			throw new RuntimeException(e);
 		}
 		ByteBuffer buffer = ByteBuffer.wrap(b);
-		if (buffer == null
-				|| (expectedBytes != null && !buffer.equals(this.expectedBytes))) {
-			endConnection();
-			throw new RuntimeException(
-					String.format(
-							"Error during file upload: expected number of bytes do not match the actual number of bytes. Expected bytes: %d, actual bytes: %d",
-							this.expectedBytes, b == null ? "n/a" : b.length));
+		if (expectedBytes != null) {
+			if (buffer.array().length != this.expectedBytes.array().length) {
+				endConnection();
+				throw new RuntimeException(
+						String.format(
+								"Error during file upload: expected number of bytes do not match the actual number of bytes. Expected bytes: %d, actual bytes: %d",
+								this.expectedBytes.array().length,
+								b == null ? "n/a" : b.length));
+			} else {
+				receivedBytes = buffer;
+			}
 		}
 	}
 
@@ -277,6 +285,18 @@ public class MockServer implements Runnable {
 
 	public void setShutdown(boolean shutdown) {
 		this.shutdown = shutdown;
+	}
+
+	public int getLocalPort() {
+		return this.ss.getLocalPort();
+	}
+
+	public ByteBuffer getReceivedBytes() {
+		return receivedBytes;
+	}
+
+	public String getLastFileReceived() {
+		return lastFileReceived;
 	}
 
 }
