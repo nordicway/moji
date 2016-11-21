@@ -3,7 +3,7 @@
         <modelVersion>4.0.0</modelVersion>
         <groupId>it.zielke</groupId>
         <artifactId>moji</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
         <name>MOJI</name>
         <description>
         MOJI is an unofficial client for the MOSS plagiarism detection service. It allows you to check source codes of students for plagiarism or collusion.
