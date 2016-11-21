@@ -22,7 +22,7 @@ Use either of the following methods to obtain a MOJI binary.
 		<dependency>
 			<groupId>it.zielke</groupId>
 			<artifactId>moji</artifactId>
-			<version>1.0.1</version>
+			<version>1.0.2</version>
 		</dependency>
 
 
