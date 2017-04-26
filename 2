@@ -1,0 +1,48 @@
+package Jtank;
+
+import java.awt.Image;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
+public class map {
+	  protected Image img;
+	  protected int width;
+	    protected int height;
+	    protected int x,y;
+	 
+    public map()
+    {
+    try {
+    	int whichmap=(int)(Math.random()*3 + 1); 
+    	switch (whichmap) {
+		case 1:
+	    	img = ImageIO.read(getClass().getResource("map5.jpg"));
+	 
+			break;
+		case 2:
+	    	img = ImageIO.read(getClass().getResource("map2.jpg"));
+	    	break;
+
+		default:
+	    	img = ImageIO.read(getClass().getResource("map3.jpg"));
+			break;
+		}
+   	
+        } catch (IOException ex) {
+            System.out.println("bqckgraound can not be load!");
+        }
+    	x=0;
+        y=0;
+    }        
+    public Image getImg(){
+    	return img;
+    }   
+    
+    public int getX(){
+    	return x;
+    }
+    public int getY(){
+    	return y;
+    }
+    
+}
