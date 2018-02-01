@@ -319,9 +319,9 @@ public class SocketClient {
 	}
 
 	// this client only uses directory mode right now.
-	// public void setOptD(int optD) {
-	// this.optD = optD;
-	// }
+	public void setOptD(int optD) {
+            this.optD = optD;
+        }
 
 	/**
 	 * Sends a command to the server to define the programming language of all
@@ -535,7 +535,9 @@ public class SocketClient {
 					"Cannot upload file. Client is either not initialized properly or the connection is already closed");
 		}
 		byte[] fileBytes = FileUtils.readFileToByteArray(file);
-		String filename = normalizeFilename(file.getAbsolutePath());
+		String filename = optD == 1 ? 
+                                    normalizeFilename(file.getAbsolutePath()).replaceAll("\\s+", "") : 
+                                    normalizeFilename(file.getName()).replaceAll("\\s+", "");
 		String uploadString = String.format(Locale.ENGLISH,
 				"file %d %s %d %s\n", // format:
 				isBaseFile ? 0 : getIncSetID(), // 1. setID
