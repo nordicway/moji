@@ -9,13 +9,13 @@ import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
@@ -131,7 +131,7 @@ public class SocketClient {
 		socket.setKeepAlive(true);
 		out = socket.getOutputStream();
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream(),
-				Charsets.US_ASCII));
+				StandardCharsets.US_ASCII));
 		currentStage = Stage.AWAITING_INITIALIZATION;
 	}
 
@@ -289,7 +289,7 @@ public class SocketClient {
 		}
 		sb.append('\n');
 		try {
-			byte[] bytes = (sb.toString()).getBytes(Charsets.US_ASCII);
+			byte[] bytes = (sb.toString()).getBytes(StandardCharsets.US_ASCII);
 			out.write(bytes);
 			out.flush();
 		} catch (IOException e) {
@@ -319,9 +319,9 @@ public class SocketClient {
 	}
 
 	// this client only uses directory mode right now.
-	// public void setOptD(int optD) {
-	// this.optD = optD;
-	// }
+	public void setOptD(int optD) {
+            this.optD = optD;
+        }
 
 	/**
 	 * Sends a command to the server to define the programming language of all
@@ -535,7 +535,9 @@ public class SocketClient {
 					"Cannot upload file. Client is either not initialized properly or the connection is already closed");
 		}
 		byte[] fileBytes = FileUtils.readFileToByteArray(file);
-		String filename = normalizeFilename(file.getAbsolutePath());
+		String filename = optD == 1 ? 
+                                    normalizeFilename(file.getAbsolutePath()).replaceAll("\\s+", "") : 
+                                    normalizeFilename(file.getName()).replaceAll("\\s+", "");
 		String uploadString = String.format(Locale.ENGLISH,
 				"file %d %s %d %s\n", // format:
 				isBaseFile ? 0 : getIncSetID(), // 1. setID
@@ -547,7 +549,7 @@ public class SocketClient {
 				 */
 				filename); // 4. file path
 		System.out.println("uploading file: " + filename);
-		out.write(uploadString.getBytes(Charsets.US_ASCII));
+		out.write(uploadString.getBytes(StandardCharsets.US_ASCII));
 		out.write(fileBytes);
 
 		currentStage = Stage.AWAITING_QUERY;
