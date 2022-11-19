@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Files;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -92,7 +93,7 @@ public class SocketClientCommandsTest extends SocketClientTestBase {
 		File tempFile = null;
 		try {
 			testSendLanguage();
-			tempFile = File.createTempFile("MOJITest", ".java");
+			tempFile = Files.createTempFile("MOJITest", ".java").toFile();
 			socketClient.uploadFile(tempFile);
 		} catch (Exception e) {
 			e.printStackTrace();
